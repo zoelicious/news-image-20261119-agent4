@@ -93,26 +93,48 @@ def ill_icj(d, x, y, w, h):
 
 
 def ill_apec(d, x, y, w, h):
-    d.rectangle([x, y, x + w, y + h], fill=SAND)
-    # skyline
-    base = y + h - 34
-    for bx, bw, bh in [(0, 34, 44), (38, 26, 62), (68, 30, 38), (102, 26, 54),
-                       (132, 30, 40), (166, 26, 58), (196, 30, 36)]:
-        d.rectangle([x + bx, base - bh, x + bx + bw, base],
+    # APEC Shenzhen trilateral: flat skyline + 3 flag poles + round summit
+    # table with seated figures. Buildings carry windows/roofs so they read
+    # as a skyline, never as bars; flags stand in open sky; the table is
+    # the foreground element with three seated figures behind it.
+    d.rectangle([x, y, x + w, y + h], fill=SKY)
+    ground = y + h - 22
+    d.rectangle([x, ground, x + w, y + h], fill=(196, 196, 170))
+    # skyline cluster, left half: varied widths/heights, navy silhouettes
+    for bx, bw, bh in [(6, 30, 34), (40, 24, 52), (68, 34, 28),
+                       (106, 26, 44), (136, 28, 36)]:
+        d.rectangle([x + bx, ground - bh, x + bx + bw, ground],
                     fill=NAVY, outline=INK)
-    d.rectangle([x, y + h - 34, x + w, y + h], fill=(196, 196, 170))
-    # three flag poles
-    for i, col in enumerate([RED, GOLD, (46, 92, 60)]):
-        px = x + 24 + i * 22
-        d.line([px, y + 12, px, y + 52], fill=INK, width=2)
-        d.polygon([(px, y + 12), (px + 16, y + 17), (px, y + 22)], fill=col)
-    # round summit table with seated figures
-    tx, ty = x + w - 96, y + h - 30
-    d.ellipse([tx, ty, tx + 84, ty + 16], fill=(250, 246, 236), outline=INK)
-    for i in range(3):
-        fx = tx + 14 + i * 26
-        d.ellipse([fx, ty - 12, fx + 10, ty - 2], fill=RED, outline=INK)
-        d.rectangle([fx - 2, ty - 2, fx + 12, ty + 4], fill=NAVY)
+    # spire on the tallest tower
+    d.polygon([(x + 44, ground - 52), (x + 60, ground - 52),
+               (x + 52, ground - 62)], fill=NAVY, outline=INK)
+    # slanted roof on the low wide block
+    d.polygon([(x + 68, ground - 28), (x + 102, ground - 28),
+               (x + 102, ground - 36), (x + 85, ground - 36)],
+              fill=NAVY, outline=INK)
+    # windows: small cream panes so the blocks read as buildings
+    for wx, wy in [(14, ground - 26), (24, ground - 26), (14, ground - 14),
+                   (46, ground - 44), (56, ground - 44), (46, ground - 32),
+                   (76, ground - 20), (90, ground - 20),
+                   (112, ground - 36), (122, ground - 36),
+                   (112, ground - 24), (142, ground - 28),
+                   (152, ground - 28), (142, ground - 16)]:
+        d.rectangle([x + wx, wy, x + wx + 4, wy + 5], fill=(250, 246, 236))
+    # three flag poles in the open sky, right of the skyline
+    for i, col in enumerate([RED, GOLD, NAVY]):
+        px = x + 170 + i * 30
+        d.line([px, y + 12, px, ground], fill=INK, width=2)
+        d.polygon([(px, y + 12), (px + 18, y + 17), (px, y + 22)], fill=col,
+                  outline=INK)
+    # round summit table with three seated figures (dots/blocks, no faces)
+    for i, col in enumerate([RED, NAVY, GOLD]):
+        cx = x + 186 + i * 36
+        d.ellipse([cx - 5, y + 62, cx + 5, y + 72], fill=col, outline=INK)
+        d.rectangle([cx - 8, y + 72, cx + 8, y + 84],
+                    fill=(250, 246, 236), outline=INK)
+    d.ellipse([x + 168, y + 80, x + 300, y + 97],
+              fill=(250, 246, 236), outline=INK)
+    d.line([x + 168, y + 88, x + 300, y + 88], fill=INK, width=1)
 
 
 def ill_anthropic(d, x, y, w, h):
